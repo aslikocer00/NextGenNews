@@ -1,0 +1,67 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: 'Manrope', sans-serif;
+  --font-serif: 'Libre Baskerville', serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --radius-sm: 0px; /* Brutalist sharp edges */
+  --radius-md: 2px;
+  --radius-lg: 4px;
+
+  /* Color Palette - Dark Editorial Theme */
+  --color-background: hsl(0 0% 5%); /* Very dark grey, almost black */
+  --color-foreground: hsl(0 0% 98%); /* Off-white */
+
+  --color-card: hsl(0 0% 9%);
+  --color-card-foreground: hsl(0 0% 98%);
+
+  --color-popover: hsl(0 0% 9%);
+  --color-popover-foreground: hsl(0 0% 98%);
+
+  --color-primary: hsl(326 100% 60%); /* Hot Pink / Magenta Accent */
+  --color-primary-foreground: hsl(0 0% 100%);
+
+  --color-secondary: hsl(250 100% 65%); /* Electric Blue/Purple */
+  --color-secondary-foreground: hsl(0 0% 100%);
+
+  --color-muted: hsl(0 0% 15%);
+  --color-muted-foreground: hsl(0 0% 60%);
+
+  --color-accent: hsl(45 100% 60%); /* Warning Yellow for highlights */
+  --color-accent-foreground: hsl(0 0% 10%);
+
+  --color-destructive: hsl(0 60% 50%);
+  --color-destructive-foreground: hsl(0 0% 98%);
+
+  --color-border: hsl(0 0% 20%);
+  --color-input: hsl(0 0% 20%);
+  --color-ring: hsl(326 100% 60%);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif tracking-tight text-balance;
+  }
+}
+
+@layer utilities {
+  .text-gradient-brand {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-[hsl(326,100%,60%)] to-[hsl(250,100%,65%)];
+  }
+  .bg-gradient-brand {
+    @apply bg-gradient-to-r from-[hsl(326,100%,60%)] to-[hsl(250,100%,65%)];
+  }
+  .hover-scale {
+    @apply transition-transform duration-300 hover:scale-[1.01];
+  }
+}
