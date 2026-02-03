@@ -30,6 +30,14 @@ Add your deployed URL here so visitors can open the site:
 - Admin update endpoint: `PATCH /api/admin/articles/:id`
 - Admin delete endpoint: `DELETE /api/admin/articles/:id`
 
+## Admin Access
+
+- Admin panel URL: `https://nextgennews.onrender.com/admin`
+- Set these environment variables on Render:
+  - `ADMIN_USERNAME` (example: `admin`)
+  - `ADMIN_PASSWORD` (required)
+  - `SESSION_SECRET` (required, long random string)
+
 ## Run Locally
 
 ```bash

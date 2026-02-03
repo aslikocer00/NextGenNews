@@ -8,13 +8,43 @@ import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import type { Article } from "@/lib/articles";
 import { Link } from "wouter";
+import { featuredStories, mainFeedStories } from "@/lib/mockData";
 
 export default function Home() {
   const { data: articles = [], isLoading } = useQuery<Article[]>({
     queryKey: ["/api/articles"],
   });
-  const featured = articles.filter((a) => a.isFeatured).slice(0, 4);
-  const feed = articles.filter((a) => !a.isFeatured);
+  const hasApiContent = articles.length > 0;
+  const fallbackFeatured: Article[] = featuredStories.map((s, idx) => ({
+    id: s.id,
+    slug: s.id,
+    title: s.title,
+    summary: s.description ?? "",
+    content: s.description ?? "",
+    category: s.category,
+    author: s.author,
+    coverImage: s.image,
+    isFeatured: idx === 0,
+    publishedAt: new Date().toISOString(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  }));
+  const fallbackFeed: Article[] = mainFeedStories.map((s) => ({
+    id: s.id,
+    slug: s.id,
+    title: s.title,
+    summary: s.description ?? "",
+    content: s.description ?? "",
+    category: s.category,
+    author: s.author,
+    coverImage: s.image,
+    isFeatured: false,
+    publishedAt: new Date().toISOString(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  }));
+  const featured = hasApiContent ? articles.filter((a) => a.isFeatured).slice(0, 4) : fallbackFeatured;
+  const feed = hasApiContent ? articles.filter((a) => !a.isFeatured) : fallbackFeed;
 
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-primary selection:text-white">
@@ -62,7 +92,7 @@ export default function Home() {
                      </div>
                   </article>
                 ))}
-                {!isLoading && articles.length === 0 && <p>Henüz makale yok. Admin panelden ekleyebilirsin.</p>}
+                {!isLoading && articles.length === 0 && <p>Su an mock icerik gosteriliyor. /admin uzerinden makale ekledikce burasi otomatik guncellenir.</p>}
              </div>
 
              <div className="mt-12 flex justify-center">

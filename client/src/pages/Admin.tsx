@@ -16,9 +16,24 @@ const emptyForm = {
 
 export default function Admin() {
   const queryClient = useQueryClient();
+  const { data: me, isLoading: meLoading } = useQuery<{ isAdmin: boolean }>({
+    queryKey: ["/api/admin/me"],
+    retry: false,
+  });
   const { data: articles = [] } = useQuery<Article[]>({ queryKey: ["/api/articles"] });
+  const [username, setUsername] = useState("admin");
+  const [password, setPassword] = useState("");
   const [form, setForm] = useState(emptyForm);
   const [editingId, setEditingId] = useState<string | null>(null);
+
+  const loginMutation = useMutation({
+    mutationFn: () => apiRequest("POST", "/api/admin/login", { username, password }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["/api/admin/me"] }),
+  });
+  const logoutMutation = useMutation({
+    mutationFn: () => apiRequest("POST", "/api/admin/logout"),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["/api/admin/me"] }),
+  });
 
   const saveMutation = useMutation({
     mutationFn: async () =>
@@ -37,9 +52,34 @@ export default function Admin() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["/api/articles"] }),
   });
 
+  if (meLoading) return <main className="container mx-auto p-6">Loading...</main>;
+  if (!me?.isAdmin) {
+    return (
+      <main className="container mx-auto p-6 space-y-4">
+        <h1 className="text-3xl font-bold">Admin Login</h1>
+        <input className="border p-2 text-black" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="username" />
+        <input
+          className="border p-2 text-black"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="password"
+        />
+        <button className="border p-2" onClick={() => loginMutation.mutate()}>
+          Login
+        </button>
+      </main>
+    );
+  }
+
   return (
     <main className="container mx-auto p-6 space-y-6">
-      <h1 className="text-3xl font-bold">Admin - Articles</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-bold">Admin - Articles</h1>
+        <button className="border px-3 py-1" onClick={() => logoutMutation.mutate()}>
+          Logout
+        </button>
+      </div>
       <div className="grid gap-2">
         {Object.entries(form).map(([key, value]) =>
           key === "isFeatured" ? (
