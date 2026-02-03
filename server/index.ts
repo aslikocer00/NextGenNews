@@ -9,6 +9,9 @@ const app = express();
 const httpServer = createServer(app);
 const MemoryStore = createMemoryStore(session);
 
+// Render is behind a proxy; trust it so secure session cookies are set correctly.
+app.set("trust proxy", 1);
+
 declare module "http" {
   interface IncomingMessage {
     rawBody: unknown;
