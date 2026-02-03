@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: nextgennews
+    env: node
+    plan: free
+    autoDeploy: true
+    buildCommand: npm ci && npm run build
+    startCommand: npm run start
+    healthCheckPath: /
