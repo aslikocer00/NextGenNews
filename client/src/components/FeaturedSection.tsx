@@ -1,8 +1,8 @@
 import { Link } from "wouter";
-import { featuredStories } from "@/lib/mockData";
+import type { Article } from "@/lib/articles";
 
-export function FeaturedSection() {
-  const stories = featuredStories;
+export function FeaturedSection({ stories }: { stories: Article[] }) {
+  if (!stories.length) return null;
   const mainStory = stories[0];
   const sideStories = stories.slice(1);
 
@@ -16,7 +16,7 @@ export function FeaturedSection() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-auto lg:h-[600px]">
         {/* Main Feature - Takes up 8 columns */}
         <div className="lg:col-span-8 relative group cursor-pointer overflow-hidden rounded-sm bg-muted h-[400px] lg:h-full">
-          <Link href={`/haber/${mainStory.id}`}>
+          <Link href={`/haber/${mainStory.slug}`}>
             <div className="absolute inset-0">
                <img 
                  src={mainStory.image} 
@@ -48,7 +48,7 @@ export function FeaturedSection() {
         {/* Side Stack - Takes up 4 columns */}
         <div className="lg:col-span-4 flex flex-col gap-6 h-full">
           {sideStories.map((story) => (
-            <Link key={story.id} href={`/haber/${story.id}`} className="flex-1 group relative overflow-hidden rounded-sm bg-muted min-h-[180px]">
+            <Link key={story.id} href={`/haber/${story.slug}`} className="flex-1 group relative overflow-hidden rounded-sm bg-muted min-h-[180px]">
               <div className="absolute inset-0">
                 <img 
                   src={story.image} 

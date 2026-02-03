@@ -5,16 +5,24 @@ import { LatestStream } from "@/components/LatestStream";
 import { PopularSection } from "@/components/MostPopular";
 import { FreeToday } from "@/components/FreeToday";
 import { Button } from "@/components/ui/button";
-import { mainFeedStories } from "@/lib/mockData";
+import { useQuery } from "@tanstack/react-query";
+import type { Article } from "@/lib/articles";
+import { Link } from "wouter";
 
 export default function Home() {
+  const { data: articles = [], isLoading } = useQuery<Article[]>({
+    queryKey: ["/api/articles"],
+  });
+  const featured = articles.filter((a) => a.isFeatured).slice(0, 4);
+  const feed = articles.filter((a) => !a.isFeatured);
+
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-primary selection:text-white">
       <Header />
       
       <main className="container mx-auto px-4 pt-8">
         {/* Hero / Featured */}
-        <FeaturedSection />
+        <FeaturedSection stories={featured.length ? featured : articles.slice(0, 4)} />
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mt-16">
           {/* Main Feed Column */}
@@ -27,33 +35,34 @@ export default function Home() {
              </div>
 
              <div className="flex flex-col gap-10">
-                {mainFeedStories.map((story) => (
+                {(feed.length ? feed : articles).map((story) => (
                   <article key={story.id} className="group grid grid-cols-1 md:grid-cols-3 gap-6">
                      <div className="md:col-span-1 aspect-video md:aspect-[4/3] overflow-hidden rounded-sm bg-muted">
                         <img 
-                          src={story.image}
+                          src={story.coverImage}
                           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                           alt={story.title}
                         />
                      </div>
                      <div className="md:col-span-2 flex flex-col justify-center">
                         <span className="text-primary text-xs font-bold uppercase tracking-widest mb-3">{story.category}</span>
-                        <h3 className="text-2xl md:text-3xl font-serif font-bold leading-tight mb-3 group-hover:text-primary transition-colors cursor-pointer">
-                           {story.title}
-                        </h3>
+                        <Link href={`/haber/${story.slug}`} className="block">
+                          <h3 className="text-2xl md:text-3xl font-serif font-bold leading-tight mb-3 group-hover:text-primary transition-colors cursor-pointer">
+                             {story.title}
+                          </h3>
+                        </Link>
                         <p className="text-muted-foreground text-sm leading-relaxed mb-4 line-clamp-2">
-                           {story.description}
+                           {story.summary}
                         </p>
                         <div className="flex items-center gap-3 text-xs font-mono text-muted-foreground">
                            <span className="text-foreground">{story.author}</span>
                            <span>•</span>
-                           <span>{story.date}</span>
-                           <span>•</span>
-                           <span>{story.commentCount} Yorum</span>
+                           <span>{new Date(story.publishedAt).toLocaleDateString("tr-TR")}</span>
                         </div>
                      </div>
                   </article>
                 ))}
+                {!isLoading && articles.length === 0 && <p>Henüz makale yok. Admin panelden ekleyebilirsin.</p>}
              </div>
 
              <div className="mt-12 flex justify-center">

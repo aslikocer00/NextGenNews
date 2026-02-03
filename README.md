@@ -1,38 +1,38 @@
 # NextGenNews
 
-Deploy this app as a single Node web service (Express API + built Vite frontend).
+NextGenNews is a modern full-stack news website built with a React frontend and an Express backend.
 
-## Quick deploy options
+## Live Website
 
-### 1) Render (recommended for this repo)
+Add your deployed URL here so visitors can open the site:
 
-This repo includes a `render.yaml`, so Render can auto-configure:
+`https://nextgennews.onrender.com/`
 
-1. Push this repo to GitHub.
-2. In Render: **New** -> **Blueprint** -> select this repo.
-3. Render will create one web service using:
-   - Build command: `npm ci && npm run build`
-   - Start command: `npm run start`
-4. Add environment variables in Render dashboard if needed:
-   - `NODE_ENV=production` (set by Render automatically in most cases)
-   - `PORT` (set automatically by Render)
-   - Any app-specific secrets you add later
+## Project Overview
 
-### 2) Railway
+- News homepage with featured stories, latest feed, and category-based content blocks
+- Dynamic article detail pages loaded by slug
+- Admin panel at `/admin` for creating, editing, and deleting articles
+- REST API for article CRUD operations
+- PostgreSQL-ready schema via Drizzle ORM
 
-1. Push this repo to GitHub.
-2. In Railway: **New Project** -> **Deploy from GitHub repo**.
-3. Set:
-   - Build command: `npm ci && npm run build`
-   - Start command: `npm run start`
-4. Railway provides `PORT` automatically.
+## Tech Stack
 
-## Local production check (optional)
+- Frontend: React, Vite, TypeScript, Tailwind CSS, TanStack Query, Wouter
+- Backend: Node.js, Express, TypeScript
+- Database: PostgreSQL + Drizzle ORM
+
+## Core Features
+
+- Article listing endpoint: `GET /api/articles`
+- Single article endpoint: `GET /api/articles/:slug`
+- Admin create endpoint: `POST /api/admin/articles`
+- Admin update endpoint: `PATCH /api/admin/articles/:id`
+- Admin delete endpoint: `DELETE /api/admin/articles/:id`
+
+## Run Locally
 
 ```bash
 npm ci
-npm run build
-npm run start
+npm run dev
 ```
-
-Then open `http://localhost:5000`.
